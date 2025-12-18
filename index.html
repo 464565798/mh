@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>蒙淮煤源 - 策克口岸报价系统</title>
+    <style>
+        /* 基础样式 - 移动端优先 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #f8fafc;
+            color: #2d3748;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        
+        body {
+            -webkit-user-select: text;
+            user-select: text;
+            -webkit-touch-callout: none;
+            min-width: 320px;
+        }
+        
+        /* 固定顶部 - 适配手机状态栏 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding-top: env(safe-area-inset-top, 10px);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+        
+        .logo-fallback {
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+        }
+        
+        .company-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .company-name {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .page-title {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* 微信二维码展示区域 - 常态显示 */
+        .wechat-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .wechat-qrcode {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .wechat-qrcode img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        
+        .wechat-fallback {
+            font-size: 10px;
+            color: #1e40af;
+            font-weight: bold;
+        }
+        
+        .wechat-text {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+        }
+        
+        /* 微信二维码弹窗样式 */
+        .wechat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .wechat-modal.active {
+            display: flex;
+        }
+        
+        .wechat-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 320px;
+            width: 85%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .wechat-content h3 {
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .wechat-image {
+            width: 220px;
+            height: 220px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 0 auto;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 10px;
+        }
+        
+        .wechat-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .wechat-image-fallback {
+            font-size: 14px;
+            color: #94a3b8;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .wechat-desc {
+            margin-top: 15px;
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .wechat-close {
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        
+        .wechat-close:hover {
+            background: #1d4ed8;
+        }
+        
+        .header-middle {
+            padding: 6px 12px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .update-time {
+            color: #93c5fd;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        .header-bottom {
+            padding: 8px 12px;
+            text-align: center;
+        }
+        
+        .price-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fef08a;
+        }
+        
+        /* 主要内容区 */
+        .main-content {
+            padding: 130px 12px 80px;
+            max-width: 100%;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* 热值区间卡片 */
+        .heat-category-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            width: 100%;
+        }
+        
+        .category-header {
+            padding: 12px 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .category-title {
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+            line-height: 1.3;
+            max-width: 85%;
+            padding: 0 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+        
+        .category-count {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 3px 8px;
+            border-radius: 15px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        /* 产品表格容器 */
+        .products-table-container {
+            padding: 0;
+            max-height: 350px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            width: 100%;
+        }
+        
+        .products-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            min-width: 600px;
+        }
+        
+        .products-table thead {
+            background: #f8fafc;
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .products-table th {
+            padding: 10px 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            z-index: 10;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .products-table th:last-child {
+            border-right: none;
+        }
+        
+        .products-table th:first-child {
+            text-align: left;
+            padding-left: 10px;
+            width: 140px;
+            min-width: 140px;
+        }
+        
+        .products-table td {
+            padding: 10px 6px;
+            text-align: center;
+            border-bottom: 1px solid #f0f4f8;
+            font-size: 12px;
+            vertical-align: middle;
+            border-right: 1px solid #f0f4f8;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.4;
+        }
+        
+        .products-table td:last-child {
+            border-right: none;
+        }
+        
+        .products-table td:first-child {
+            text-align: left;
+            padding-left: 10px;
+            white-space: normal;
+        }
+        
+        .products-table tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        
+        .products-table tbody tr:hover {
+            background: #eff6ff;
+            transition: background 0.2s;
+        }
+        
+        /* 产品信息单元格 */
+        .product-info-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 3px 0;
+        }
+        
+        .product-image-container {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        
+        .product-details {
+            flex: 1;
+            min-width: 0;
+            padding: 1px 0;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 13px;
+            line-height: 1.3;
+            margin-bottom: 2px;
+            white-space: normal;
+            word-break: break-word;
+        }
+        
+        .product-desc {
+            font-size: 11px;
+            color: #4a5568;
+            line-height: 1.3;
+            margin-bottom: 2px;
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-origin {
+            font-size: 10px;
+            color: #718096;
+            line-height: 1.3;
+            white-space: normal;
+        }
+        
+        /* 价格和涨跌样式 */
+        .up {
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .down {
+            color: #dc2626;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .heat-value {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 12px;
+        }
+        
+        .price-value {
+            font-weight: 600;
+            color: #2563eb;
+            font-size: 12px;
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* 运费表 */
+        .shipping-section {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .section-title {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .shipping-table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .shipping-table {
+            width: 100%;
+            min-width: 550px;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+        
+        .shipping-table thead {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .shipping-table th {
+            padding: 10px 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            border-right: 1px solid #1e40af;
+            white-space: nowrap;
+        }
+        
+        .shipping-table th:last-child {
+            border-right: none;
+        }
+        
+        .shipping-table td {
+            padding: 10px 6px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 12px;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        
+        .shipping-table tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        
+        /* 底部固定 */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            color: #94a3b8;
+            padding: 8px 12px;
+            font-size: 11px;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 10px));
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 100%;
+        }
+        
+        .footer-content > div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            text-align: center;
+        }
+        
+        /* 加载/空状态/错误提示 */
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        .table-empty {
+            padding: 40px 15px;
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            border: 1px dashed #e2e8f0;
+            border-radius: 8px;
+            margin: 15px;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px 15px;
+            color: #dc2626;
+            background: #fee2e2;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        /* 热值选择器 */
+        .heat-selector {
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 10px;
+            padding: 10px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        
+        .selector-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px !important;
+        }
+        
+        .selector-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 0;
+            width: 100%;
+            padding: 0 10px 10px 10px !important;
+        }
+        
+        .heat-btn {
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            color: #2d3748;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /*flex: 1;*/
+            min-width: 70px;
+            max-width: calc(50% - 4px);
+            margin: 0;
+            border: none;
+        }
+        
+        .heat-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .heat-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
+        
+        .show-all-btn {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+        
+        .show-all-btn:hover {
+            background: #15803d;
+            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+        }
+        
+        /* 微信二维码hover效果 */
+        .wechat-qrcode {
+            transition: all 0.3s ease;
+        }
+        
+        .wechat-qrcode:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 适配大屏手机（≥480px） */
+        @media (min-width: 480px) {
+            .products-table th:first-child {
+                width: 160px;
+            }
+            .heat-btn {
+                min-width: 80px;
+                max-width: calc(33.333% - 5.33px);
+                padding: 8px 18px;
+            }
+            .product-image-container {
+                width: 45px;
+                height: 45px;
+            }
+            .category-title {
+                max-width: 90%;
+                padding: 0 8px;
+            }
+            .wechat-qrcode {
+                width: 32px;
+                height: 32px;
+            }
+            .wechat-text {
+                font-size: 10px;
+            }
+        }
+        
+        /* 适配平板/小屏电脑（≥768px） */
+        @media (min-width: 768px) {
+            .header {
+                padding-top: env(safe-area-inset-top, 0);
+            }
+            .header-top {
+                padding: 12px 16px;
+            }
+            .logo {
+                width: 36px;
+                height: 36px;
+                margin-right: 10px;
+            }
+            .company-name {
+                font-size: 18px;
+            }
+            .page-title {
+                font-size: 16px;
+            }
+            .wechat-qrcode {
+                width: 36px;
+                height: 36px;
+                margin-bottom: 4px;
+            }
+            .wechat-text {
+                font-size: 11px;
+            }
+            .header-middle {
+                padding: 8px 16px;
+                font-size: 12px;
+                gap: 0;
+            }
+            .header-bottom {
+                padding: 10px 16px;
+            }
+            .price-tag {
+                padding: 6px 20px;
+                font-size: 16px;
+            }
+            .main-content {
+                padding: 170px 20px 100px;
+                max-width: 1200px;
+            }
+            .heat-category-card {
+                margin-bottom: 25px;
+                border-radius: 12px;
+                box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            }
+            .category-header {
+                padding: 18px 20px;
+            }
+            .category-title {
+                font-size: 18px;
+                max-width: 90%;
+                padding: 0 10px;
+            }
+            .category-count {
+                font-size: 14px;
+                padding: 5px 12px;
+                border-radius: 20px;
+                min-width: 70px;
+            }
+            .products-table-container {
+                max-height: 500px;
+            }
+            .products-table {
+                min-width: 750px;
+                table-layout: auto;
+            }
+            .products-table th {
+                padding: 15px 12px;
+                font-size: 14px;
+            }
+            .products-table th:first-child {
+                width: 300px;
+                min-width: 250px;
+                padding-left: 20px;
+            }
+            .products-table td {
+                padding: 15px 12px;
+                font-size: 14px;
+            }
+            .products-table td:first-child {
+                padding-left: 20px;
+            }
+            .product-info-cell {
+                gap: 12px;
+                padding: 5px 0;
+            }
+            .product-image-container {
+                width: 50px;
+                height: 50px;
+            }
+            .product-name {
+                font-size: 15px;
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+            .product-desc {
+                font-size: 13px;
+                margin-bottom: 3px;
+                -webkit-line-clamp: unset;
+            }
+            .product-origin {
+                font-size: 12px;
+            }
+            .up, .down, .heat-value, .price-value {
+                font-size: 14px;
+            }
+            .shipping-section {
+                margin-top: 30px;
+                border-radius: 12px;
+                box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            }
+            .section-title {
+                padding: 18px 20px;
+                font-size: 16px;
+            }
+            .shipping-table {
+                min-width: 700px;
+            }
+            .shipping-table th {
+                padding: 15px 12px;
+                font-size: 14px;
+            }
+            .shipping-table td {
+                padding: 15px 12px;
+                font-size: 14px;
+            }
+            .footer {
+                padding: 15px 20px;
+                font-size: 13px;
+                padding-bottom: calc(15px + env(safe-area-inset-bottom, 0));
+            }
+            .footer-content {
+                flex-wrap: nowrap;
+                gap: 0;
+            }
+            .loading {
+                padding: 60px 20px;
+                font-size: 15px;
+            }
+            .table-empty {
+                padding: 60px 20px;
+                font-size: 15px;
+                margin: 20px;
+            }
+            .error {
+                padding: 60px 20px;
+                font-size: 15px;
+                margin: 20px 0;
+            }
+            .heat-selector {
+                margin-bottom: 25px;
+                padding: 10px !important;
+                border-radius: 12px;
+                box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            }
+            .selector-title {
+                font-size: 17px;
+                margin-bottom: 15px;
+                padding: 0 10px !important;
+            }
+            .selector-buttons {
+                gap: 12px;
+                padding: 0 10px 10px 10px !important;
+            }
+            .heat-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                border-radius: 8px;
+                min-width: auto;
+                max-width: none;
+                flex: none;
+            }
+            .main-content > div:last-child {
+                padding: 25px 20px;
+                font-size: 13px;
+            }
+            .main-content > div:last-child > div:nth-child(2) {
+                margin-top: 10px;
+                font-size: 12px;
+            }
+            .wechat-content {
+                max-width: 350px;
+                padding: 30px;
+            }
+            .wechat-image {
+                width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 固定顶部 -->
+    <header class="header">
+        <div class="header-top">
+            <div class="logo-area">
+                <div class="logo" id="companyLogo">
+                    <div class="logo-fallback">M</div>
+                </div>
+                <div class="company-info">
+                    <div class="company-name" id="companyName">加载中...</div>
+                    <div class="page-title" id="pageTitle">加载中...</div>
+                </div>
+            </div>
+            <div class="wechat-area" onclick="showWechatModal()">
+                <div class="wechat-qrcode">
+                    <div class="wechat-fallback">微信</div>
+                </div>
+                <div class="wechat-text">关注我们</div>
+            </div>
+        </div>
+        
+        <div class="header-middle">
+            <div id="headerDesc">加载中...</div>
+            <div class="update-time" id="updateTime">--:--:--</div>
+        </div>
+        
+        <div class="header-bottom">
+            <div class="price-tag" id="topTitle">所有热值区间</div>
+        </div>
+    </header>
+
+    <!-- 微信二维码弹窗 -->
+    <div class="wechat-modal" id="wechatModal">
+        <div class="wechat-content">
+            <h3 id="wechatCompanyName">蒙淮煤源</h3>
+            <div class="wechat-image" id="wechatImage">
+                <div class="wechat-image-fallback">二维码加载中...</div>
+            </div>
+            <p class="wechat-desc" id="wechatDescription">微信扫一扫关注官方公众号</p>
+            <button class="wechat-close" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 热值区间选择器 -->
+        <div class="heat-selector" id="heatSelector">
+            <div class="selector-title">
+                <span>选择热值区间</span>
+                <span id="productCount">加载中...</span>
+            </div>
+            <div class="selector-buttons" id="heatButtons">
+                <!-- 热值区间按钮由JS动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 产品表格展示区域 -->
+        <div id="heatCategoriesContainer">
+            <div class="loading">正在加载产品数据...</div>
+        </div>
+        
+        <!-- 运费表 -->
+        <div class="shipping-section">
+            <div class="section-title" id="bottomTitle">运费报价</div>
+            
+            <div class="product-specs">
+                <div class="specs-title" id="shippingTitle">今日区域运价表 (出发地: 加载中...)</div>
+                <div class="shipping-table-container">
+                    <table class="shipping-table" id="shippingTable">
+                        <thead>
+                            <tr>
+                                <th>目的地</th>
+                                <th>距离(km)</th>
+                                <th>车型</th>
+                                <th>今日运价(元/吨)</th>
+                                <th>涨跌(%)</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shippingData">
+                            <tr>
+                                <td colspan="6" class="loading">正在加载运费数据...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部信息 -->
+        <div>
+            <div>数据更新时间: <span id="dataUpdateTime">--:--:--</span></div>
+            <div>
+                当前显示: <span id="currentMode">全部区间</span>
+                <span id="currentCategoryInfo" style="margin-left: 15px;"></span>
+            </div>
+        </div>
+    </main>
+
+    <!-- 固定底部 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div id="copyright">蒙淮公司 © 2024</div>
+            <div id="footerNotice">数据仅供参考，实际价格以合同为准</div>
+            <div id="servicePhone">热线: 加载中...</div>
+        </div>
+    </footer>
+
+    <script>
+        // 全局配置
+        let appConfig = null;
+        let allCategories = [];
+        let currentCategoryId = null;
+        let categoryColorMap = new Map();
+
+        // 颜色管理器
+        const ColorManager = {
+            // 默认颜色数组（10个）
+            defaultColors: [
+                'linear-gradient(135deg, #3b82f6, #2563eb)',
+                'linear-gradient(135deg, #16a34a, #15803d)',
+                'linear-gradient(135deg, #9333ea, #7e22ce)',
+                'linear-gradient(135deg, #dc2626, #b91c1c)',
+                'linear-gradient(135deg, #ea580c, #c2410c)',
+                'linear-gradient(135deg, #0891b2, #0e7490)',
+                'linear-gradient(135deg, #db2777, #be185d)',
+                'linear-gradient(135deg, #ca8a04, #a16207)',
+                'linear-gradient(135deg, #4f46e5, #4338ca)',
+                'linear-gradient(135deg, #059669, #047857)'
+            ],
+            
+            // 随机颜色生成器
+            generateRandomGradient() {
+                const colors = [
+                    '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b',
+                    '#06b6d4', '#ec4899', '#84cc16', '#6366f1', '#14b8a6'
+                ];
+                const color1 = colors[Math.floor(Math.random() * colors.length)];
+                let color2 = colors[Math.floor(Math.random() * colors.length)];
+                
+                while (color2 === color1) {
+                    color2 = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                return `linear-gradient(135deg, ${color1}, ${color2})`;
+            },
+            
+            // 获取分类颜色
+            getColorForCategory(categoryId, index) {
+                // 如果有配置的颜色，先尝试按顺序取配置的颜色
+                if (appConfig?.appearance?.categoryColors) {
+                    const configColors = appConfig.appearance.categoryColors;
+                    if (configColors.length > 0) {
+                        // 使用模运算循环使用配置的颜色
+                        return configColors[index % configColors.length];
+                    }
+                }
+                
+                // 使用默认颜色数组
+                if (index < this.defaultColors.length) {
+                    return this.defaultColors[index];
+                }
+                
+                // 超过默认颜色数量，生成随机颜色
+                return this.generateRandomGradient();
+            },
+            
+            // 初始化所有分类的颜色映射
+            initCategoryColors(categories) {
+                categoryColorMap.clear();
+                categories.forEach((category, index) => {
+                    const color = this.getColorForCategory(category.category, index);
+                    categoryColorMap.set(category.category, color);
+                });
+            },
+            
+            // 获取特定分类的颜色
+            getCategoryColor(categoryId) {
+                return categoryColorMap.get(categoryId) || this.defaultColors[0];
+            }
+        };
+
+        // 加载配置文件
+        async function loadAppConfig() {
+            try {
+                const response = await fetch('config.json');
+                if (!response.ok) throw new Error('配置文件加载失败');
+                appConfig = await response.json();
+                return appConfig;
+            } catch (error) {
+                console.error('加载配置失败:', error);
+                // 返回默认配置
+                return {
+                    companyInfo: {
+                        name: '蒙淮煤源',
+                        logo: 'images/company_logo.png',
+                        officialWechatQRCode: 'images/wechat_qrcode.jpg',
+                        servicePhone: '400-123-4567',
+                        copyright: '蒙淮煤源 © 2024',
+                        qrDescription: '微信扫一扫关注官方公众号'
+                    },
+                    appearance: {
+                        headerBackground: 'linear-gradient(135deg, #1e40af, #3b82f6)',
+                        categoryColors: ColorManager.defaultColors,
+                        shippingTitleBg: '#1e3a8a',
+                        shippingHeaderBg: '#2563eb',
+                        footerBg: '#1e293b',
+                        priceColor: '#2563eb',
+                        upColor: '#16a34a',
+                        downColor: '#dc2626',
+                        activeBtnColor: '#2563eb',
+                        allBtnColor: '#16a34a'
+                    },
+                    pages: {
+                        main: {
+                            title: '策克口岸报价系统',
+                            subtitle: '蒙淮煤源最新市场报价'
+                        }
+                    },
+                    productConfig: {
+                        dataSource: 'products/',
+                        defaultImage: 'images/coal_default.png',
+                        productFiles: ['high_heat.json', 'medium_heat.json', 'low_heat.json']
+                    },
+                    shippingConfig: {
+                        dataSource: 'shipping.json',
+                        defaultDeparture: '策克口岸'
+                    }
+                };
+            }
+        }
+
+        // 更新页面头部信息
+        function updateHeaderInfo() {
+            if (!appConfig || !appConfig.companyInfo) return;
+            
+            const companyInfo = appConfig.companyInfo;
+            const pagesConfig = appConfig.pages?.main || {};
+            
+            // 公司名称
+            document.getElementById('companyName').textContent = companyInfo.name;
+            document.getElementById('wechatCompanyName').textContent = companyInfo.name;
+            document.title = `${companyInfo.name} - ${pagesConfig.title || '报价系统'}`;
+            
+            // 页面标题
+            document.getElementById('pageTitle').textContent = pagesConfig.title || '策克口岸报价系统';
+            document.getElementById('headerDesc').textContent = pagesConfig.subtitle || '最新市场报价';
+            
+            // 公司Logo
+            const logoDiv = document.getElementById('companyLogo');
+            if (companyInfo.logo) {
+                const img = document.createElement('img');
+                img.src = companyInfo.logo;
+                img.alt = `${companyInfo.name} Logo`;
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    logoDiv.querySelector('.logo-fallback').style.display = 'block';
+                };
+                img.onload = function() {
+                    logoDiv.querySelector('.logo-fallback').style.display = 'none';
+                };
+                logoDiv.appendChild(img);
+            }
+            
+            // 微信二维码展示（常态显示）
+            const wechatDiv = document.querySelector('.wechat-qrcode');
+            const wechatModalImage = document.getElementById('wechatImage');
+            
+            if (companyInfo.officialWechatQRCode) {
+                // 顶部常态显示的小二维码
+                const smallImg = document.createElement('img');
+                smallImg.src = companyInfo.officialWechatQRCode;
+                smallImg.alt = '官方微信二维码';
+                smallImg.onerror = function() {
+                    this.style.display = 'none';
+                    wechatDiv.querySelector('.wechat-fallback').style.display = 'block';
+                    wechatModalImage.querySelector('.wechat-image-fallback').style.display = 'block';
+                };
+                smallImg.onload = function() {
+                    wechatDiv.querySelector('.wechat-fallback').style.display = 'none';
+                };
+                wechatDiv.appendChild(smallImg);
+                
+                // 弹窗显示的大二维码
+                const largeImg = document.createElement('img');
+                largeImg.src = companyInfo.officialWechatQRCode;
+                largeImg.alt = '官方微信二维码';
+                largeImg.onerror = function() {
+                    this.style.display = 'none';
+                    wechatModalImage.querySelector('.wechat-image-fallback').style.display = 'block';
+                };
+                largeImg.onload = function() {
+                    wechatModalImage.querySelector('.wechat-image-fallback').style.display = 'none';
+                };
+                wechatModalImage.appendChild(largeImg);
+            }
+            
+            // 二维码描述
+            if (companyInfo.qrDescription) {
+                document.getElementById('wechatDescription').textContent = companyInfo.qrDescription;
+            }
+            
+            // 页脚信息
+            document.getElementById('copyright').textContent = companyInfo.copyright || '蒙淮煤源 © 2024';
+            document.getElementById('servicePhone').textContent = `热线: ${companyInfo.servicePhone || '400-123-4567'}`;
+            
+            // 底部提示
+            if (companyInfo.footerNotice) {
+                document.getElementById('footerNotice').textContent = companyInfo.footerNotice;
+            }
+        }
+
+        // 微信二维码弹窗控制
+        function showWechatModal() {
+            document.getElementById('wechatModal').classList.add('active');
+        }
+
+        function closeWechatModal() {
+            document.getElementById('wechatModal').classList.remove('active');
+        }
+
+        // 点击弹窗外部关闭
+        document.getElementById('wechatModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWechatModal();
+            }
+        });
+
+        // 读取产品文件列表配置
+        async function loadProductFilesConfig() {
+            try {
+                const productFiles = appConfig?.productConfig?.productFiles || [];
+                if (productFiles.length === 0) {
+                    throw new Error('产品文件列表为空');
+                }
+                return productFiles;
+            } catch (error) {
+                console.error('加载产品文件列表失败:', error);
+                return [];
+            }
+        }
+
+        // 核心功能：根据配置文件读取产品数据
+        async function loadAllProductCategories() {
+            try {
+                const productFiles = await loadProductFilesConfig();
+                if (productFiles.length === 0) {
+                    throw new Error('产品文件列表为空');
+                }
+
+                const categoryPromises = productFiles.map(async (fileName) => {
+                    try {
+                        const filePath = `${appConfig?.productConfig?.dataSource || 'products/'}${fileName}`;
+                        const response = await fetch(filePath);
+                        if (!response.ok) {
+                            console.warn(`跳过无效文件: ${fileName}`);
+                            return null;
+                        }
+                        const categoryData = await response.json();
+                        if (!categoryData.category || !Array.isArray(categoryData.products)) {
+                            console.warn(`文件${fileName}数据结构无效`);
+                            return null;
+                        }
+                        return categoryData;
+                    } catch (e) {
+                        console.warn(`读取文件${fileName}失败:`, e);
+                        return null;
+                    }
+                });
+
+                const categories = (await Promise.all(categoryPromises)).filter(Boolean);
+                return categories;
+            } catch (error) {
+                console.error('加载产品数据失败:', error);
+                return [];
+            }
+        }
+
+        // 加载运费数据
+        async function loadShippingData() {
+            try {
+                const filePath = appConfig?.shippingConfig?.dataSource || 'shipping.json';
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error('运费数据加载失败');
+                const shippingData = await response.json();
+                const departure = shippingData.departure || appConfig?.shippingConfig?.defaultDeparture || '未知出发地';
+                document.getElementById('shippingTitle').textContent = `今日区域运价表 (出发地: ${departure})`;
+                return shippingData.routes && Array.isArray(shippingData.routes) 
+                    ? shippingData.routes 
+                    : [];
+            } catch (error) {
+                console.error('加载运费数据失败:', error);
+                document.getElementById('shippingTitle').textContent = '今日区域运价表 (出发地: 加载失败)';
+                return [];
+            }
+        }
+
+        // 渲染产品数据
+        function renderProductData() {
+            const container = document.getElementById('heatCategoriesContainer');
+            
+            const targetCategories = currentCategoryId
+                ? allCategories.filter(cat => cat.category === currentCategoryId)
+                : allCategories;
+
+            if (targetCategories.length === 0) {
+                container.innerHTML = '<div class="table-empty">暂无产品数据</div>';
+                return;
+            }
+
+            let html = '';
+            targetCategories.forEach(category => {
+                const categoryColor = ColorManager.getCategoryColor(category.category);
+                const productCount = category.products?.length || 0;
+                
+                let productTable = '';
+                if (productCount > 0) {
+                    productTable = `
+                        <div class="products-table-container">
+                            <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>产品信息</th>
+                                        <th>热值(kcal)</th>
+                                        <th>硫分(%)</th>
+                                        <th>水份(%)</th>
+                                        <th>灰分(%)</th>
+                                        <th>含税价(元/吨)</th>
+                                        <th>涨跌(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${category.products.map(product => {
+                                        const changeClass = product.涨跌幅 >= 0 ? 'up' : 'down';
+                                        const changeSymbol = product.涨跌幅 >= 0 ? '+' : '';
+                                        const imageUrl = product.productImage || 
+                                                       (appConfig?.productConfig?.defaultImage || 'images/coal_default.png');
+                                        return `
+                                            <tr>
+                                                <td>
+                                                    <div class="product-info-cell">
+                                                        <div class="product-image-container">
+                                                            <img class="product-image" 
+                                                                 src="${imageUrl}" 
+                                                                 alt="${product.productName}"
+                                                                 loading="lazy"
+                                                                 onerror="this.src='${appConfig?.productConfig?.defaultImage || 'images/coal_default.png'}'">
+                                                        </div>
+                                                        <div class="product-details">
+                                                            <div class="product-name">${product.productName || '-'}</div>
+                                                            <div class="product-desc">${product.productDesc || '-'}</div>
+                                                            <div class="product-origin">${product.产地 || '-'} | ${product.库存 || '-'}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td><span class="heat-value">${product.热值 || 0}</span></td>
+                                                <td>${(product.硫分 || 0).toFixed(1)}</td>
+                                                <td>${(product.水份 || 0).toFixed(1)}</td>
+                                                <td>${(product.灰分 || 0).toFixed(1)}</td>
+                                                <td><span class="price-value">¥${(product.含税价 || 0).toLocaleString()}</span></td>
+                                                <td class="${changeClass}">${changeSymbol}${(product.涨跌幅 || 0).toFixed(1)}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    productTable = '<div class="table-empty">该区间暂无产品数据</div>';
+                }
+
+                html += `
+                    <div class="heat-category-card">
+                        <div class="category-header" style="background: ${categoryColor};">
+                            <div class="category-title">${category.categoryDisplay || `热值区间(${category.category})`}</div>
+                            <div class="category-count">${productCount}个产品</div>
+                        </div>
+                        ${productTable}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            updateDisplayInfo(targetCategories);
+        }
+
+        // 渲染运费数据
+        function renderShippingData(routes) {
+            const shippingTbody = document.getElementById('shippingData');
+            if (routes.length === 0) {
+                shippingTbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="table-empty">
+                            暂无运费数据<br>
+                            <span style="font-size: 11px; color: #94a3b8; margin-top: 5px; display: inline-block;">
+                                请检查shipping.json文件是否存在且格式正确
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            shippingTbody.innerHTML = routes.map(item => {
+                const changeClass = item.涨跌幅 >= 0 ? 'up' : 'down';
+                const changeSymbol = item.涨跌幅 >= 0 ? '+' : '';
+                return `
+                    <tr>
+                        <td><strong>${item.目的地 || '-'}</strong></td>
+                        <td>${item.距离 || '-'}</td>
+                        <td>${item.车型 || '-'}</td>
+                        <td><strong>¥${item.今日运价 || 0}</strong></td>
+                        <td class="${changeClass}"><strong>${changeSymbol}${(item.涨跌幅 || 0).toFixed(1)}</strong></td>
+                        <td style="color: #4a5568; font-size: 13px; line-height: 1.4;">${item.备注 || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 渲染热值区间选择按钮
+        function renderHeatSelector() {
+            const countEl = document.getElementById('productCount');
+            const buttonsEl = document.getElementById('heatButtons');
+            
+            const totalProducts = allCategories.reduce((sum, cat) => sum + (cat.products?.length || 0), 0);
+            countEl.textContent = `${totalProducts}个产品`;
+
+            if (allCategories.length === 0) {
+                buttonsEl.innerHTML = '<div class="table-empty" style="margin: 0;">暂无热值区间数据</div>';
+                return;
+            }
+
+            let buttonsHtml = `
+                <a href="javascript:void(0);" class="heat-btn show-all-btn ${!currentCategoryId ? 'active' : ''}" 
+                   onclick="selectCategory(null)">全部区间</a>
+            `;
+            
+            allCategories.forEach((category, index) => {
+                const productCount = category.products?.length || 0;
+                const isActive = currentCategoryId === category.category;
+                const btnText = category.categoryDisplay || `热值区间(${category.category})`;
+                const btnColor = ColorManager.getCategoryColor(category.category);
+                
+                buttonsHtml += `
+                    <a href="javascript:void(0);" class="heat-btn ${isActive ? 'active' : ''}"
+                       onclick="selectCategory('${category.category}')"
+                       title="${btnText}"
+                       style="${isActive ? `background: ${btnColor}; border-color: ${btnColor};` : ''}">${btnText}</a>`;
+            });
+            
+            buttonsEl.innerHTML = buttonsHtml;
+            updateTopTitle();
+        }
+
+        // 选中热值区间
+        function selectCategory(categoryId) {
+            currentCategoryId = categoryId;
+            renderProductData();
+            renderHeatSelector();
+            const url = new URL(window.location);
+            if (categoryId) {
+                url.searchParams.set('category', categoryId);
+            } else {
+                url.searchParams.delete('category');
+            }
+            window.history.replaceState({}, '', url);
+        }
+
+        // 辅助函数：更新顶部标题
+        function updateTopTitle() {
+            const topTitle = document.getElementById('topTitle');
+            if (currentCategoryId) {
+                const category = allCategories.find(cat => cat.category === currentCategoryId);
+                topTitle.textContent = category?.categoryDisplay || `热值区间(${currentCategoryId})`;
+            } else {
+                topTitle.textContent = '所有热值区间';
+            }
+        }
+
+        // 辅助函数：更新底部显示信息
+        function updateDisplayInfo(showingCategories) {
+            const modeEl = document.getElementById('currentMode');
+            const infoEl = document.getElementById('currentCategoryInfo');
+            if (currentCategoryId) {
+                const category = showingCategories[0];
+                modeEl.textContent = '指定热值区间';
+                infoEl.textContent = `当前区间: ${category?.categoryDisplay || `热值区间(${currentCategoryId})`}`;
+            } else {
+                modeEl.textContent = '全部区间';
+                infoEl.textContent = `共${showingCategories.length}个区间，${showingCategories.reduce((sum, cat) => sum + (cat.products?.length || 0), 0)}个产品`;
+            }
+        }
+
+        // 辅助函数：更新时间显示
+        function updateTimeDisplay() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-CN');
+            const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
+            const fullTime = `${dateStr} ${timeStr}`;
+            document.getElementById('updateTime').textContent = fullTime;
+            document.getElementById('dataUpdateTime').textContent = fullTime;
+        }
+
+        // 更新页面样式
+        function updatePageStyles() {
+            if (!appConfig?.appearance) return;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                .header {
+                    background: ${appConfig.appearance.headerBackground || 'linear-gradient(135deg, #1e40af, #3b82f6)'} !important;
+                }
+                .shipping-section .section-title {
+                    background: ${appConfig.appearance.shippingTitleBg || '#1e3a8a'} !important;
+                }
+                .shipping-table thead {
+                    background: ${appConfig.appearance.shippingHeaderBg || '#2563eb'} !important;
+                }
+                .footer {
+                    background: ${appConfig.appearance.footerBg || '#1e293b'} !important;
+                }
+                .price-value {
+                    color: ${appConfig.appearance.priceColor || '#2563eb'} !important;
+                }
+                .up {
+                    color: ${appConfig.appearance.upColor || '#16a34a'} !important;
+                }
+                .down {
+                    color: ${appConfig.appearance.downColor || '#dc2626'} !important;
+                }
+                .heat-btn.active {
+                    background: ${appConfig.appearance.activeBtnColor || '#2563eb'} !important;
+                    border-color: ${appConfig.appearance.activeBtnColor || '#2563eb'} !important;
+                }
+                .heat-btn.show-all-btn {
+                    background: ${appConfig.appearance.allBtnColor || '#16a34a'} !important;
+                    border-color: ${appConfig.appearance.allBtnColor || '#16a34a'} !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // 初始化应用
+        async function initApp() {
+            try {
+                // 1. 加载配置
+                await loadAppConfig();
+                
+                // 2. 更新页面样式
+                updatePageStyles();
+                
+                // 3. 更新头部信息
+                updateHeaderInfo();
+                
+                // 4. 加载数据
+                const urlParams = new URLSearchParams(window.location.search);
+                currentCategoryId = urlParams.get('category');
+                
+                allCategories = await loadAllProductCategories();
+                
+                // 5. 初始化颜色映射
+                ColorManager.initCategoryColors(allCategories);
+                
+                // 6. 加载运费数据
+                const shippingRoutes = await loadShippingData();
+                
+                // 7. 渲染页面
+                renderProductData();
+                renderShippingData(shippingRoutes);
+                renderHeatSelector();
+                
+                // 8. 更新时间
+                updateTimeDisplay();
+                setInterval(updateTimeDisplay, 1000);
+                
+                console.log('应用初始化完成');
+            } catch (error) {
+                console.error('应用初始化失败:', error);
+                document.getElementById('heatCategoriesContainer').innerHTML = 
+                    '<div class="error">系统初始化失败，请刷新页面重试</div>';
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // 键盘ESC键关闭微信弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeWechatModal();
+            }
+        });
+    </script>
+</body>
+</html>

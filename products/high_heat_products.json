@@ -1,0 +1,48 @@
+{
+  "category": "high_heat",
+  "categoryDisplay": "#5500 - 6000#",
+  "products": [
+    {
+      "id": "ngb_high_sulfur_b",
+      "productName": "南戈壁 高硫B",
+      "productDesc": "高热值动力煤 | 硫份偏高",
+      "productImage": "images/coal_high_sulfur.png",
+      "热值": 5850,
+      "硫分": 1.2,
+      "水份": 8.5,
+      "灰分": 12.3,
+      "含税价": 5980,
+      "涨跌幅": 1.5,
+      "产地": "内蒙古南戈壁",
+      "库存": "现货"
+    },
+    {
+      "id": "sx_premium_coal",
+      "productName": "山西优质煤",
+      "productDesc": "低硫高热值 | 环保指标优",
+      "productImage": "images/coal_premium.png",
+      "热值": 6100,
+      "硫分": 0.5,
+      "水份": 7.2,
+      "灰分": 10.5,
+      "含税价": 6250,
+      "涨跌幅": 1.2,
+      "产地": "山西大同",
+      "库存": "充足"
+    },
+    {
+      "id": "high_quality_coal",
+      "productName": "优质动力煤",
+      "productDesc": "热值稳定 | 低灰分",
+      "productImage": "images/coal_high_quality.png",
+      "热值": 5900,
+      "硫分": 0.8,
+      "水份": 7.5,
+      "灰分": 11.2,
+      "含税价": 6150,
+      "涨跌幅": 2.1,
+      "产地": "陕西神木",
+      "库存": "现货"
+    }
+  ]
+}

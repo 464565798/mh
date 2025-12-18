@@ -1,0 +1,53 @@
+{
+  "pages": {
+    "main": {
+      "title": "策克口岸煤炭报价系统",
+      "subtitle": "蒙淮煤源最新市场行情与价格"
+    }
+  },
+  "companyInfo": {
+    "name": "蒙淮煤源集团",
+    "logo": "images/logo.png",
+    "officialWechatQRCode": "images/wechat_qr.png",
+    "servicePhone": "400-888-8888",
+    "copyright": "蒙淮煤源集团 © 2024",
+    "qrDescription": "扫码关注获取最新煤炭价格信息",
+    "footerNotice": "数据仅供参考，具体价格请咨询商务经理"
+  },
+  "shippingConfig": {
+    "dataSource": "shipping.json",
+    "defaultDeparture": "策克口岸"
+  },
+  "productConfig": {
+    "dataSource": "products/",
+    "defaultImage": "images/coal_default.png",
+    "productFiles": [
+      "low_heat_products.json",
+      "medium_heat_products.json",
+      "high_heat_products.json"
+    ]
+  },
+  "appearance": {
+    "headerBackground": "linear-gradient(135deg, #1e40af, #3b82f6)",
+    "categoryColors": [
+      "linear-gradient(135deg, #3b82f6, #2563eb)",
+      "linear-gradient(135deg, #16a34a, #15803d)",
+      "linear-gradient(135deg, #9333ea, #7e22ce)",
+      "linear-gradient(135deg, #dc2626, #b91c1c)",
+      "linear-gradient(135deg, #ea580c, #c2410c)",
+      "linear-gradient(135deg, #0891b2, #0e7490)",
+      "linear-gradient(135deg, #db2777, #be185d)",
+      "linear-gradient(135deg, #ca8a04, #a16207)",
+      "linear-gradient(135deg, #4f46e5, #4338ca)",
+      "linear-gradient(135deg, #059669, #047857)"
+    ],
+    "shippingTitleBg": "#1e3a8a",
+    "shippingHeaderBg": "#2563eb",
+    "footerBg": "#1e293b",
+    "priceColor": "#2563eb",
+    "upColor": "#16a34a",
+    "downColor": "#dc2626",
+    "activeBtnColor": "#2563eb",
+    "allBtnColor": "#16a34a"
+  }
+}

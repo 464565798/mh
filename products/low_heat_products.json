@@ -1,0 +1,34 @@
+{
+  "category": "low_heat",
+  "categoryDisplay": "#4500 - 5000#",
+  "products": [
+    {
+      "id": "standard_coal_b",
+      "productName": "标准B类煤",
+      "productDesc": "价格实惠 | 民用优选",
+      "productImage": "images/coal_standard.png",
+      "热值": 4850,
+      "硫分": 1.5,
+      "水份": 11.2,
+      "灰分": 15.3,
+      "含税价": 4950,
+      "涨跌幅": 0.5,
+      "产地": "陕西榆林",
+      "库存": "充足"
+    },
+    {
+      "id": "economy_coal",
+      "productName": "经济型煤",
+      "productDesc": "价格最低 | 基础用煤",
+      "productImage": "images/coal_economy.png",
+      "热值": 4600,
+      "硫分": 1.8,
+      "水份": 12.5,
+      "灰分": 16.8,
+      "含税价": 4750,
+      "涨跌幅": -0.5,
+      "产地": "甘肃平凉",
+      "库存": "充足"
+    }
+  ]
+}

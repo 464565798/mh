@@ -1,0 +1,34 @@
+{
+  "category": "medium_heat",
+  "categoryDisplay": "#5000 - 5500#",
+  "products": [
+    {
+      "id": "mongolia_import",
+      "productName": "蒙古进口煤",
+      "productDesc": "进口动力煤 | 性价比高",
+      "productImage": "images/coal_import.png",
+      "热值": 5250,
+      "硫分": 0.8,
+      "水份": 9.5,
+      "灰分": 13.5,
+      "含税价": 5350,
+      "涨跌幅": 0.8,
+      "产地": "蒙古国",
+      "库存": "大宗"
+    },
+    {
+      "id": "low_sulfur_coal",
+      "productName": "特低硫煤",
+      "productDesc": "超低硫分 | 环保要求严",
+      "productImage": "images/coal_low_sulfur.png",
+      "热值": 5300,
+      "硫分": 0.3,
+      "水份": 6.8,
+      "灰分": 9.8,
+      "含税价": 6450,
+      "涨跌幅": 2.5,
+      "产地": "山西忻州",
+      "库存": "限量"
+    }
+  ]
+}
